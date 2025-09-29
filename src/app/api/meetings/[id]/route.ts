@@ -11,9 +11,9 @@ const UpdateMeetingSchema = z.object({
 
 export async function PATCH(
   req: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params;
+  const { id } = params;
 
   try {
     const body = await req.json();
