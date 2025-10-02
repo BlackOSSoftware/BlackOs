@@ -8,12 +8,14 @@ const UpdateMeetingSchema = z.object({
   notes: z.string().optional(),
   nextMeetingDatetime: z.string().optional(),
 });
-
+interface Params {
+  id: string;
+}
 export async function PATCH(
   req: Request,
-  { params }: { params: Promise<{ id: string }> }
+   context: { params: Promise<Params> }
 ) {
-  const { id } = await params;
+  const { id } = await context.params;
 
   try {
     const body = await req.json();

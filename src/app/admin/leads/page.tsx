@@ -11,6 +11,7 @@ type Lead = {
   phone: string;
   category: "Website Development" | "App Development" | "Digital Marketing" | "Software Development" | "Mining Machine" | "Other";
   description?: string;
+  datetime: string;
   source: "Justdial" | "Personal" | "Other";
   handler: "Anas" | "Aman";
   status: string;
@@ -24,7 +25,7 @@ export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [form, setForm] = useState<Partial<Lead>>({});
   const [editId, setEditId] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false); 
+  const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState("");
 
   // Fetch leads
@@ -130,6 +131,16 @@ export default function LeadsPage() {
               onChange={(e) => handleChange("description", e.target.value)}
               className="p-3 rounded-lg bg-[#1a1a1a] border border-gray-700 focus:border-[var(--color-primary)] outline-none w-full"
             />
+            <input
+              type="datetime-local"
+              placeholder="Timeline/Date"
+              value={form.datetime || ""}
+              onChange={(e) => handleChange("datetime", e.target.value)}
+              max={new Date().toISOString().slice(0, 16)} // prevents future dates
+              className="p-3 rounded-lg bg-[#1a1a1a] border border-gray-700 
+             focus:border-[var(--color-primary)] outline-none w-full"
+            />
+
             <select
               value={form.category || ""}
               onChange={(e) => handleChange("category", e.target.value as Lead["category"])}
@@ -208,7 +219,7 @@ export default function LeadsPage() {
       )}
 
       {/* Search */}
-      <div className="flex items-center gap-2 mb-4 bg-[#111] p-3 rounded-lg w-full">
+      <div className="flex items-center gap-2 mb-4 bg-[#111] p-3 rounded-lg w-120">
         <Search className="text-gray-400" size={18} />
         <input
           type="text"
@@ -221,13 +232,14 @@ export default function LeadsPage() {
 
       {/* Table for md+ */}
       <div className="hidden md:block">
-        <div className="overflow-x-auto w-full">
-          <table className="w-full min-w-max border border-gray-700 rounded-lg text-sm">
+        <div className="overflow-x-auto w-290">
+          <table className="w-full min-w-max border border-gray-700 rounded-lg text-sm scr">
             <thead className="bg-[#222] text-[var(--color-highlight)]">
               <tr>
                 <th className="p-2 whitespace-nowrap">Name</th>
                 <th className="p-2 whitespace-nowrap">Phone</th>
                 <th className="p-2 whitespace-nowrap">Description</th>
+                <th className="p-2 whitespace-nowrap">Date Time</th>
                 <th className="p-2 whitespace-nowrap">Category</th>
                 <th className="p-2 whitespace-nowrap">Source</th>
                 <th className="p-2 whitespace-nowrap">Handler</th>
@@ -244,6 +256,16 @@ export default function LeadsPage() {
                   <td className="p-2">{lead.name}</td>
                   <td className="p-2">{lead.phone}</td>
                   <td className="p-2">{lead.description}</td>
+                  <td className="p-2">
+                    {lead.datetime
+                      ? new Date(lead.datetime).toLocaleString("en-US", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                        hour12: true,
+                      })
+                      : ""}
+                  </td>
+
                   <td className="p-2">{lead.category}</td>
                   <td className="p-2">{lead.source}</td>
                   <td className="p-2">{lead.handler}</td>
@@ -281,6 +303,13 @@ export default function LeadsPage() {
               <h3 className="text-lg font-semibold">{lead.name}</h3>
               <p className="text-gray-400">📞 {lead.phone}</p>
               <p>Description: {lead.description}</p>
+              <p>Date Time:  {lead.datetime
+                ? new Date(lead.datetime).toLocaleString("en-US", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                  hour12: true,
+                })
+                : ""}</p>
               <p>Category: {lead.category}</p>
               <p>Source: {lead.source}</p>
               <p>Handler: {lead.handler}</p>

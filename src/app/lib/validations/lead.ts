@@ -1,9 +1,10 @@
-import { z } from "zod";
+import { date, z } from "zod";
 
 export const leadSchema = z.object({
   name: z.string().min(1, "Name is required"),
   phone: z.string().min(10, "Phone must be at least 10 digits"),
-    designation: z.string().min(1, "Designation is required"),
+  description: z.string().min(1, "Description is required"),
+  datetime: z.string().min(1, "Date and time are required"),
   leadSource: z.string().min(1),
   handler: z.string().min(1),
   response: z.string().min(1),

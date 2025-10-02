@@ -8,7 +8,8 @@ export default function Topbar() {
   const router = useRouter();
 
   async function handleLogout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await fetch("/api/logout", { method: "POST" });
+    localStorage.removeItem("token");
     router.push("/login");
   }
 

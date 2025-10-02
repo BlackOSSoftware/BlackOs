@@ -1,10 +1,17 @@
+// src/middleware.ts
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import type { NextRequest } from "next/server";
 
+export const runtime = "nodejs";
+
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("token")?.value; // use server cookie, not localStorage
-    console.log(token)
+  // read only from cookie (server-side)
+  const token = req.cookies.get("token")?.value;
+
+  // DEBUG: temporarily show what middleware sees (remove after testing)
+  // console.log("middleware token:", token);
+
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
@@ -12,11 +19,11 @@ export function middleware(req: NextRequest) {
   try {
     jwt.verify(token, process.env.JWT_SECRET!);
     return NextResponse.next();
-  } catch {
+  } catch (err) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin", "/admin/:path*"],
 };
