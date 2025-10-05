@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "@/app/lib/mongodb";
-import Miner from "@/app/models/miner";
+import { connectDB } from "../../../../app/lib/mongodb";
+import Miner from "../../../../app/models/miner";
 import { MinerZ } from "@/app/lib/validations/minerSehema";
 
 // Correct typing for context parameter
