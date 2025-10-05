@@ -15,11 +15,12 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { identifier, password } = LoginSchema.parse(body);
 
-    const db = await connectDB();
+    const { db } = await connectDB(); // <- extract native MongoDB connection
 
-    const user = await db.collection("users").findOne({
-      $or: [{ email: identifier }, { username: identifier }],
-    });
+const user = await db.collection("users").findOne({
+  $or: [{ email: identifier }, { username: identifier }],
+});
+
 
     if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 

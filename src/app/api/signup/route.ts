@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { connectDB } from "@/app/lib/mongodb";
+import type { Db } from "mongodb"; // ✅ for proper typing
 
 const SignupSchema = z.object({
   username: z.string().min(2),
@@ -14,8 +15,11 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { username, email, password } = SignupSchema.parse(body);
 
-    const db = await connectDB();
-    const users = db.collection("users");
+    // ✅ Proper typing for db (avoids TypeScript & ESLint errors)
+    const { db } = await connectDB();
+    const database = db as unknown as Db;
+
+    const users = database.collection("users");
 
     const existingUser = await users.findOne({ email });
     if (existingUser) {
@@ -37,6 +41,8 @@ export async function POST(req: Request) {
       id: result.insertedId,
     });
   } catch (err: unknown) {
-    return NextResponse.json({ error: (err as Error).message }, { status: 400 });
+    const errorMessage = err instanceof Error ? err.message : "Signup failed";
+    console.error("POST /api/signup error:", err);
+    return NextResponse.json({ error: errorMessage }, { status: 400 });
   }
 }

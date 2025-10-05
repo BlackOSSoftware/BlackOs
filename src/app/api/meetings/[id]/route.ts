@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createMeetingObj, readMeetings, writeMeetings } from "@/app/lib/meetings";
+import { createMeetingObj, readMeetings, writeMeetings } from "@/app/lib/validations/meetings";
 import { z } from "zod";
 
 const UpdateMeetingSchema = z.object({

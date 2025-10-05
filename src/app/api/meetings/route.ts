@@ -1,5 +1,5 @@
 // app/api/meetings/route.ts
-import { createMeetingObj, readMeetings, writeMeetings } from "@/app/lib/meetings";
+import { createMeetingObj, readMeetings, writeMeetings } from "@/app/lib/validations/meetings";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
