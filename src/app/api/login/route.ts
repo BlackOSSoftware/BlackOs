@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { connectDB } from "@/app/lib/mongodb";
+import { connectDB } from "../../../app/lib/mongodb";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 

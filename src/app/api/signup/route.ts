@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { connectDB } from "@/app/lib/mongodb";
+import { connectDB } from "../../../app/lib/mongodb";
 import type { Db } from "mongodb"; // ✅ for proper typing
 
 const SignupSchema = z.object({
