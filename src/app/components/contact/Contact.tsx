@@ -113,7 +113,7 @@ const ContactForm: React.FC = () => {
       setLoading(false);
     }
   };
-
+// update
   return (
     <section className="relative py-20 px-6 bg-[var(--color-black)] text-[var(--color-white)]">
       <div className="container max-w-6xl mx-auto mt-4">
