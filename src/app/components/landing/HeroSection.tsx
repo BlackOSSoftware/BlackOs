@@ -312,7 +312,7 @@ const HeroSection: React.FC = () => {
                     required
                     value={service}
                     onChange={(e) => setService(e.target.value)}
-                    className="w-full rounded-xl border border-gray-700 bg-[var(--color-black)] px-4 py-2.5 text-sm text-[var(--color-white)] outline-none ring-0 transition focus:border-[var(--color-primary)]"
+                    className="w-full rounded-xl border border-gray-700 bg-[var(--color-wgite)] px-4 py-2.5 text-sm text-[var(--color-white)] outline-none ring-0 transition focus:border-[var(--color-primary)]"
                   >
                     <option value="" disabled>
                       Select service
