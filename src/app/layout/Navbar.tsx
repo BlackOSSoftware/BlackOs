@@ -4,8 +4,25 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import Button from "../components/Reuse/button";
 import { useRouter, usePathname } from "next/navigation";
+
+const NAV_ITEMS = [
+  { label: "About", href: "#about", id: "about" },
+  { label: "Why Us", href: "#why-us", id: "why-us" },
+  { label: "Mission", href: "#mission", id: "mission" },
+  { label: "Works", href: "#works", id: "works" },
+  { label: "Services", href: "/services", id: "services-page" },
+  { label: "Pages", href: "#", id: "pages" },
+];
+
+const PAGES_DROPDOWN_LINKS = [
+  { label: "Contact Us", href: "/contact" },
+  { label: "Terms & Conditions", href: "/terms" },
+  { label: "Our Pricing", href: "/pricing" },
+  { label: "About Us", href: "/about" },
+];
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,27 +34,15 @@ const Navbar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const navItems = [
-    { label: "About", href: "#about", id: "about" },
-    { label: "Why Us", href: "#why-us", id: "why-us" },
-    { label: "Mission", href: "#mission", id: "mission" },
-    { label: "Works", href: "#works", id: "works" },
-    { label: "Services", href: "/services", id: "services-page" },
-    { label: "Pages", href: "#", id: "pages" },
-  ];
-
-  // ✅ Helper for navigation + scroll
   const handleNavClick = (href: string) => {
     if (href.startsWith("#")) {
       if (pathname === "/") {
-        // Already on home → smooth scroll
         const id = href.replace("#", "");
         const section = document.getElementById(id);
         if (section) {
           section.scrollIntoView({ behavior: "smooth" });
         }
       } else {
-        // Not on home → go to home with hash
         router.push("/" + href);
       }
     } else {
@@ -45,12 +50,11 @@ const Navbar: React.FC = () => {
     }
   };
 
-  // ✅ Close dropdown on outside click
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
+        !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsDropdownOpen(false);
       }
@@ -59,85 +63,106 @@ const Navbar: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ✅ Active section highlight
-  // ✅ Active section highlight
-useEffect(() => {
-  if (pathname === "/") {
-    const handleScroll = () => {
-      let current = "";
-      navItems.forEach((item) => {
-        if (item.href.startsWith("#")) {
-          const section = document.getElementById(item.id);
-          if (section) {
-            const rect = section.getBoundingClientRect();
-            if (
-              rect.top <= window.innerHeight / 2 &&
-              rect.bottom >= window.innerHeight / 2
-            ) {
-              current = item.label;
+  useEffect(() => {
+    if (pathname === "/") {
+      const handleScroll = () => {
+        let current = "";
+        NAV_ITEMS.forEach((item) => {
+          if (item.href.startsWith("#")) {
+            const section = document.getElementById(item.id);
+            if (section) {
+              const rect = section.getBoundingClientRect();
+              if (
+                rect.top <= window.innerHeight / 2 &&
+                rect.bottom >= window.innerHeight / 2
+              ) {
+                current = item.label;
+              }
             }
           }
+        });
+        if (current) {
+          setActive(current);
+        } else {
+          setActive("");
         }
-      });
-      if (current) {
-        setActive(current);
-      } else {
-        setActive(""); // no section active
-      }
-    };
+      };
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
+      window.addEventListener("scroll", handleScroll);
+      handleScroll();
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
 
-    return () => window.removeEventListener("scroll", handleScroll);
-  } else {
-    // ✅ On other pages → mark correct page item
-    const currentNav = navItems.find((item) => item.href === pathname);
-    setActive(currentNav ? currentNav.label : "");
-  }
-}, [pathname]);
-
+    if (pathname === "/services") {
+      setActive("Services");
+    } else if (PAGES_DROPDOWN_LINKS.some((link) => link.href === pathname)) {
+      setActive("Pages");
+    } else {
+      setActive("");
+    }
+  }, [pathname]);
 
   return (
     <>
-      {/* Header */}
       <motion.header
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] md:w-[85%] backdrop-blur-md"
+        className="fixed top-4 left-1/2 z-50 w-[90%] md:w-[85%] -translate-x-1/2 backdrop-blur-md"
       >
-        <nav className="flex items-center justify-between px-6 py-3 rounded-full border border-white/10 bg-[var(--color-black)]/75 shadow-lg">
-          {/* Logo */}
+        <nav
+          aria-label="Main navigation"
+          className="flex items-center justify-between rounded-full border border-white/10 bg-[var(--color-black)]/75 px-6 py-3 shadow-lg"
+        >
+          {/* Logo + text */}
           <Link
             href="/"
-            scroll={true}
-            className="group flex items-center gap-2 text-xl font-bold cursor-pointer"
+            scroll
+            className="group flex cursor-pointer items-center gap-2 text-xl font-bold"
           >
-            <span className="text-[var(--color-primary)] transition-transform duration-500 group-hover:rotate-180">
-              ⟠
-            </span>
+            <div className="relative h-10 w-10 overflow-hidden rounded-full bg-white/5">
+              {/* yahan src ko apne actual logo path se change kar lena */}
+              <Image
+                src="/logo/logo.png"
+                alt="BlackOS Software logo"
+                fill
+                className="object-contain p-1.5"
+                priority
+              />
+            </div>
             <span className="text-white transition-colors duration-300 group-hover:text-[var(--color-primary)]">
               BlackOS
             </span>
           </Link>
 
           {/* Desktop Menu */}
-          <ul className="hidden md:flex items-center gap-8 text-sm font-medium">
-            {navItems.map((item) =>
+          <ul className="hidden items-center gap-8 text-sm font-medium md:flex">
+            {NAV_ITEMS.map((item) =>
               item.label === "Pages" ? (
-                <li key={item.label} className="relative" ref={dropdownRef}>
+                <li
+                  key={item.label}
+                  ref={dropdownRef}
+                  className="relative group"
+                  onMouseEnter={() => setIsDropdownOpen(true)}
+                  onMouseLeave={() => setIsDropdownOpen(false)}
+                >
                   <button
-                    onClick={() => setIsDropdownOpen((prev) => !prev)}
-                    className={`flex items-center gap-1 cursor-pointer transition-colors duration-300 ${
+                    type="button"
+                    aria-haspopup="true"
+                    aria-expanded={isDropdownOpen}
+                    className={`flex items-center gap-1 cursor-pointer transition-colors duration-300 group-hover:text-[var(--color-primary)] ${
                       active === item.label
                         ? "text-[var(--color-primary)]"
-                        : "text-white hover:text-[var(--color-primary)]"
+                        : "text-white"
                     }`}
+                    onClick={() => setIsDropdownOpen((prev) => !prev)}
                   >
-                    {item.label}
+                    <span className="relative">
+                      {item.label}
+                      <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-[var(--color-primary)] transition-all duration-300 group-hover:w-full" />
+                    </span>
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform ${
+                      className={`h-4 w-4 transition-transform ${
                         isDropdownOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -149,19 +174,15 @@ useEffect(() => {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute top-full mt-2 w-48 bg-[var(--color-black)]/90 border border-white/10 rounded-xl shadow-lg backdrop-blur-md py-3"
+                        transition={{ duration: 0.18 }}
+                        className="absolute top-full mt-2 w-52 rounded-xl border border-white/10 bg-[var(--color-black)]/90 py-3 shadow-lg backdrop-blur-md"
                       >
-                        {[
-                          { label: "Contact Us", href: "/contact" },
-                          { label: "Terms & Conditions", href: "/terms" },
-                          { label: "Our Pricing", href: "/pricing" },
-                          { label: "About Us", href: "/about" },
-                        ].map((link) => (
+                        {PAGES_DROPDOWN_LINKS.map((link) => (
                           <li key={link.label}>
                             <Link
                               href={link.href}
-                              className="block px-4 py-2 text-sm text-white hover:bg-[var(--color-primary)]/20 transition-colors"
+                              className="block px-4 py-2 text-sm text-white transition-colors hover:bg-[var(--color-primary)]/15 hover:text-[var(--color-primary)]"
+                              onClick={() => setIsDropdownOpen(false)}
                             >
                               {link.label}
                             </Link>
@@ -172,41 +193,47 @@ useEffect(() => {
                   </AnimatePresence>
                 </li>
               ) : (
-                <li key={item.label} className="relative">
+                <li key={item.label} className="relative group">
                   <button
+                    type="button"
                     onClick={() => handleNavClick(item.href)}
-                    className={`cursor-pointer transition-colors duration-300 ${
+                    className={`cursor-pointer transition-colors duration-300 group-hover:text-[var(--color-primary)] ${
                       active === item.label
                         ? "text-[var(--color-primary)]"
-                        : "text-white hover:text-[var(--color-primary)]"
+                        : "text-white"
                     }`}
                   >
-                    {item.label}
+                    <span className="relative">
+                      {item.label}
+                      <span
+                        className={`absolute -bottom-1 left-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 ${
+                          active === item.label
+                            ? "w-full"
+                            : "w-0 group-hover:w-full"
+                        }`}
+                      />
+                    </span>
                   </button>
-                  {active === item.label && item.href.startsWith("#") && (
-                    <motion.div
-                      layoutId="underline"
-                      className="absolute left-0 -bottom-1 h-[2px] w-full bg-[var(--color-primary)] rounded-full"
-                    />
-                  )}
                 </li>
               )
             )}
           </ul>
 
-          {/* Desktop Button */}
+          {/* Desktop CTA */}
           <div className="hidden md:block">
             <Button onClick={() => router.push("/contact")}>
               Let&apos;s Talk ↗
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile menu button */}
           <button
-            className="md:hidden text-white transition-colors duration-300 hover:text-[var(--color-primary)]"
+            type="button"
+            className="text-white transition-colors duration-300 hover:text-[var(--color-primary)] md:hidden"
             onClick={() => setIsOpen(true)}
+            aria-label="Open navigation menu"
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="h-6 w-6" />
           </button>
         </nav>
       </motion.header>
@@ -215,50 +242,50 @@ useEffect(() => {
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Overlay */}
             <motion.div
-              className="fixed inset-0 bg-black/50 z-40"
+              className="fixed inset-0 z-40 bg-black/50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
             />
 
-            {/* Sidebar */}
-            <motion.div
-              className="fixed top-0 right-0 h-full w-[75%] bg-[var(--color-black)]/75 backdrop-blur-md z-50 p-6 flex flex-col justify-between"
+            <motion.aside
+              className="fixed top-0 right-0 z-50 flex h-full w-[75%] flex-col justify-between bg-[var(--color-black)]/80 p-6 backdrop-blur-md"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.4 }}
+              transition={{ type: "tween", duration: 0.35 }}
+              aria-label="Mobile navigation"
             >
               <div>
-                {/* Close Button */}
                 <button
-                  className="self-end mb-8 text-white transition-colors duration-300 hover:text-[var(--color-primary)]"
+                  type="button"
+                  className="mb-8 self-end text-white transition-colors duration-300 hover:text-[var(--color-primary)]"
                   onClick={() => setIsOpen(false)}
+                  aria-label="Close navigation menu"
                 >
-                  <X className="w-7 h-7" />
+                  <X className="h-7 w-7" />
                 </button>
 
-                {/* Links */}
                 <ul className="flex flex-col gap-6 text-lg font-medium">
-                  {navItems.map((item) =>
+                  {NAV_ITEMS.map((item) =>
                     item.label === "Pages" ? (
                       <li key={item.label}>
                         <button
+                          type="button"
                           onClick={() =>
                             setIsMobileDropdownOpen((prev) => !prev)
                           }
-                          className={`flex items-center justify-between w-full transition-colors ${
+                          className={`flex w-full items-center justify-between transition-colors ${
                             active === item.label
                               ? "text-[var(--color-primary)]"
                               : "text-white hover:text-[var(--color-primary)]"
                           }`}
                         >
-                          {item.label}
+                          <span>{item.label}</span>
                           <ChevronDown
-                            className={`w-5 h-5 transition-transform ${
+                            className={`h-5 w-5 transition-transform ${
                               isMobileDropdownOpen ? "rotate-180" : ""
                             }`}
                           />
@@ -270,20 +297,15 @@ useEffect(() => {
                               initial={{ opacity: 0, height: 0 }}
                               animate={{ opacity: 1, height: "auto" }}
                               exit={{ opacity: 0, height: 0 }}
-                              transition={{ duration: 0.3 }}
-                              className="ml-4 mt-2 flex flex-col gap-3 border-l border-white/20 pl-4"
+                              transition={{ duration: 0.25 }}
+                              className="mt-2 ml-4 flex flex-col gap-3 border-l border-white/20 pl-4 text-base"
                             >
-                              {[
-                                { label: "Contact Us", href: "/contact" },
-                                { label: "Terms & Conditions", href: "/terms" },
-                                { label: "Our Pricing", href: "/pricing" },
-                                { label: "About Us", href: "/about" },
-                              ].map((link) => (
+                              {PAGES_DROPDOWN_LINKS.map((link) => (
                                 <li key={link.label}>
                                   <Link
                                     href={link.href}
                                     onClick={() => setIsOpen(false)}
-                                    className="text-white hover:text-[var(--color-primary)]"
+                                    className="block text-white transition-colors hover:text-[var(--color-primary)]"
                                   >
                                     {link.label}
                                   </Link>
@@ -296,11 +318,12 @@ useEffect(() => {
                     ) : (
                       <li key={item.label}>
                         <button
+                          type="button"
                           onClick={() => {
                             setIsOpen(false);
                             handleNavClick(item.href);
                           }}
-                          className={`cursor-pointer transition-colors duration-300 ${
+                          className={`w-full text-left transition-colors duration-300 ${
                             active === item.label
                               ? "text-[var(--color-primary)]"
                               : "text-white hover:text-[var(--color-primary)]"
@@ -314,17 +337,16 @@ useEffect(() => {
                 </ul>
               </div>
 
-              {/* ✅ Button always at bottom */}
               <Button
                 onClick={() => {
                   setIsOpen(false);
                   router.push("/contact");
                 }}
-                className="w-full mt-6"
+                className="mt-6 w-full"
               >
                 Let&apos;s Talk ↗
               </Button>
-            </motion.div>
+            </motion.aside>
           </>
         )}
       </AnimatePresence>

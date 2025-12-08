@@ -119,12 +119,12 @@ const ContactForm: React.FC = () => {
       <div className="container max-w-6xl mx-auto mt-4">
         {/* Heading */}
         <div className="max-w-3xl mx-auto text-center mb-12">
-          <Button
+          {/* <Button
             className="px-4 py-2 rounded-full border border-[var(--color-highlight)] text-sm mb-4"
             type="button"
           >
             Let&apos;s Talk
-          </Button>
+          </Button> */}
 
           <h2 className="text-4xl md:text-5xl font-bold mt-2">We&apos;re Here To Help</h2>
           <p className="text-gray-400 mt-4">Our team is ready to support you with expert advice &amp; solutions.</p>
