@@ -54,14 +54,14 @@ export default function Home(): JSX.Element {
     contactPoint: [
       {
         "@type": "ContactPoint",
-        telephone: "+91-00000-00000",
+        telephone: "+91-9301893055",
         contactType: "Customer Service",
         areaServed: "IN",
         availableLanguage: ["English", "Hindi"]
       },
       {
         "@type": "ContactPoint",
-        telephone: "+91-00000-00001",
+        telephone: "+91-7869600155",
         contactType: "Sales",
         areaServed: "IN",
         availableLanguage: ["English"]
@@ -75,10 +75,10 @@ export default function Home(): JSX.Element {
     ],
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Office Street 123",
-      addressLocality: "City",
-      addressRegion: "State",
-      postalCode: "000000",
+      streetAddress: "bhawarkua main road",
+      addressLocality: "Indore",
+      addressRegion: "Madhya Pradesh",
+      postalCode: "452010",
       addressCountry: "IN"
     }
   };
