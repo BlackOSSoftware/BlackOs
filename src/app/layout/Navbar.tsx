@@ -1,20 +1,37 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, JSX } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown } from "lucide-react";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  User,
+  Award,
+  Flag,
+  Briefcase,
+  Settings,
+  FileText,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import Button from "../components/Reuse/button";
 import { useRouter, usePathname } from "next/navigation";
 
-const NAV_ITEMS = [
-  { label: "About", href: "#about", id: "about" },
-  { label: "Why Us", href: "#why-us", id: "why-us" },
-  { label: "Mission", href: "#mission", id: "mission" },
-  { label: "Works", href: "#works", id: "works" },
-  { label: "Services", href: "/services", id: "services-page" },
-  { label: "Pages", href: "#", id: "pages" },
+type NavItem = {
+  label: string;
+  href: string;
+  id?: string;
+  icon: JSX.Element;
+};
+
+const NAV_ITEMS: NavItem[] = [
+  { label: "About", href: "#about", id: "about", icon: <User className="h-4 w-4" /> },
+  { label: "Why Us", href: "#why-us", id: "why-us", icon: <Award className="h-4 w-4" /> },
+  { label: "Mission", href: "#mission", id: "mission", icon: <Flag className="h-4 w-4" /> },
+  { label: "Works", href: "#works", id: "works", icon: <Briefcase className="h-4 w-4" /> },
+  { label: "Services", href: "/services", id: "services-page", icon: <Settings className="h-4 w-4" /> },
+  { label: "Pages", href: "#", id: "pages", icon: <FileText className="h-4 w-4" /> },
 ];
 
 const PAGES_DROPDOWN_LINKS = [
@@ -69,7 +86,7 @@ const Navbar: React.FC = () => {
         let current = "";
         NAV_ITEMS.forEach((item) => {
           if (item.href.startsWith("#")) {
-            const section = document.getElementById(item.id);
+            const section = item.id ? document.getElementById(item.id) : null;
             if (section) {
               const rect = section.getBoundingClientRect();
               if (
@@ -150,16 +167,19 @@ const Navbar: React.FC = () => {
                     type="button"
                     aria-haspopup="true"
                     aria-expanded={isDropdownOpen}
-                    className={`flex items-center gap-1 cursor-pointer transition-colors duration-300 group-hover:text-[var(--color-primary)] ${
+                    className={`flex items-center gap-2 cursor-pointer transition-colors duration-300 group-hover:text-[var(--color-primary)] ${
                       active === item.label
                         ? "text-[var(--color-primary)]"
                         : "text-white"
                     }`}
                     onClick={() => setIsDropdownOpen((prev) => !prev)}
                   >
-                    <span className="relative">
-                      {item.label}
-                      <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-[var(--color-primary)] transition-all duration-300 group-hover:w-full" />
+                    <span className="flex items-center gap-2">
+                      {item.icon}
+                      <span className="relative">
+                        {item.label}
+                        <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-[var(--color-primary)] transition-all duration-300 group-hover:w-full" />
+                      </span>
                     </span>
                     <ChevronDown
                       className={`h-4 w-4 transition-transform ${
@@ -197,21 +217,24 @@ const Navbar: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleNavClick(item.href)}
-                    className={`cursor-pointer transition-colors duration-300 group-hover:text-[var(--color-primary)] ${
+                    className={`flex items-center gap-2 cursor-pointer transition-colors duration-300 group-hover:text-[var(--color-primary)] ${
                       active === item.label
                         ? "text-[var(--color-primary)]"
                         : "text-white"
                     }`}
                   >
-                    <span className="relative">
-                      {item.label}
-                      <span
-                        className={`absolute -bottom-1 left-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 ${
-                          active === item.label
-                            ? "w-full"
-                            : "w-0 group-hover:w-full"
-                        }`}
-                      />
+                    <span className="flex items-center gap-2">
+                      {item.icon}
+                      <span className="relative">
+                        {item.label}
+                        <span
+                          className={`absolute -bottom-1 left-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 ${
+                            active === item.label
+                              ? "w-full"
+                              : "w-0 group-hover:w-full"
+                          }`}
+                        />
+                      </span>
                     </span>
                   </button>
                 </li>
@@ -277,13 +300,16 @@ const Navbar: React.FC = () => {
                           onClick={() =>
                             setIsMobileDropdownOpen((prev) => !prev)
                           }
-                          className={`flex w-full items-center justify-between transition-colors ${
+                          className={`flex w-full items-center justify-between gap-3 transition-colors ${
                             active === item.label
                               ? "text-[var(--color-primary)]"
                               : "text-white hover:text-[var(--color-primary)]"
                           }`}
                         >
-                          <span>{item.label}</span>
+                          <span className="flex items-center gap-3">
+                            {item.icon}
+                            <span>{item.label}</span>
+                          </span>
                           <ChevronDown
                             className={`h-5 w-5 transition-transform ${
                               isMobileDropdownOpen ? "rotate-180" : ""
@@ -323,13 +349,14 @@ const Navbar: React.FC = () => {
                             setIsOpen(false);
                             handleNavClick(item.href);
                           }}
-                          className={`w-full text-left transition-colors duration-300 ${
+                          className={`w-full text-left transition-colors duration-300 flex items-center gap-3 ${
                             active === item.label
                               ? "text-[var(--color-primary)]"
                               : "text-white hover:text-[var(--color-primary)]"
                           }`}
                         >
-                          {item.label}
+                          {item.icon}
+                          <span>{item.label}</span>
                         </button>
                       </li>
                     )
