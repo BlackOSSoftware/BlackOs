@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
   "main": "index.js",
+  "engines": {
+    "node": "20.5.1"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
