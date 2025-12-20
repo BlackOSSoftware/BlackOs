@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 
 const SITE_URL = "https://blackossoftwaresolution.in";
 const SITENAME = "BlackOS Software";
-const DESCRIPTION =
-  "BlackOS builds enterprise AI solutions and modern UX. Design-led engineering, secure systems, and fast delivery.";
+const DESCRIPTION = "BlackOS Software Solution provides AI-powered software, web development, mobile app development, and custom IT solutions for businesses worldwide."
+
 
 const extendedKeywords = [
   "BlackOS",
@@ -138,7 +138,7 @@ const extendedKeywords = [
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "BlackOS — AI-driven software & design",
+  title: "BlackOS Software Solution | AI, Web & App Development Company",
   description: DESCRIPTION,
   keywords: extendedKeywords,
   authors: [
@@ -165,7 +165,7 @@ export const metadata: Metadata = {
     { media: "(prefers-color-scheme: dark)", color: "#000000" },
   ],
   openGraph: {
-    title: "BlackOS — AI-driven software & design",
+    title: "BlackOS Software Solution | AI, Web & App Development Company",
     description: DESCRIPTION,
     url: SITE_URL,
     siteName: SITENAME,
@@ -182,7 +182,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BlackOS — AI-driven software & design",
+    title: "BlackOS Software Solution | AI, Web & App Development Company",
     description: DESCRIPTION,
     creator: "@BlackOS",
     images: [`${SITE_URL}/og-image.png`],
